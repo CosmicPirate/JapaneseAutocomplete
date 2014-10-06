@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseAutocomplete", "JapaneseAutocomplete\JapaneseAutocomplete.csproj", "{E3B541E2-36D2-4F6B-BB6B-384D4D30245A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Suggestion", "Suggestion\Suggestion.csproj", "{446AF274-6921-4DD5-A12E-C999235B7DE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseAutocompleteServer", "JapaneseAutocompleteServer\JapaneseAutocompleteServer.csproj", "{3D48386B-636E-419D-A126-5F4BFC65525E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseAutocompleteClient", "JapaneseAutocompleteClient\JapaneseAutocompleteClient.csproj", "{EA01090E-0297-4036-8ABD-B73B12F85731}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3B541E2-36D2-4F6B-BB6B-384D4D30245A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B541E2-36D2-4F6B-BB6B-384D4D30245A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B541E2-36D2-4F6B-BB6B-384D4D30245A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B541E2-36D2-4F6B-BB6B-384D4D30245A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{446AF274-6921-4DD5-A12E-C999235B7DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{446AF274-6921-4DD5-A12E-C999235B7DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{446AF274-6921-4DD5-A12E-C999235B7DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{446AF274-6921-4DD5-A12E-C999235B7DE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D48386B-636E-419D-A126-5F4BFC65525E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D48386B-636E-419D-A126-5F4BFC65525E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D48386B-636E-419D-A126-5F4BFC65525E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D48386B-636E-419D-A126-5F4BFC65525E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA01090E-0297-4036-8ABD-B73B12F85731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA01090E-0297-4036-8ABD-B73B12F85731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA01090E-0297-4036-8ABD-B73B12F85731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA01090E-0297-4036-8ABD-B73B12F85731}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal
