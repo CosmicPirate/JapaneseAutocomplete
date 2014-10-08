@@ -17,9 +17,12 @@ namespace Suggestion
 
         public bool CaseSensitive { get; set; }
 
-        public Vocabulary(Dictionary<string, int> words)
+        public Vocabulary(Dictionary<string, int> words, int limit = 0)
         {
-            _words = new Trie();
+            if (limit > 0)
+                _words = new Trie(limit);
+            else
+                _words = new Trie();
 
             foreach(KeyValuePair<string, int> word in words)
             {

@@ -18,16 +18,24 @@ namespace JapaneseAutocomplete
 
             StreamReader sr = System.IO.File.OpenText("test.in");
 
-            if (args.Length > 0 && args[0] == "b")
+            if (args.Length >= 1)
             {
-                Stopwatch watch = new Stopwatch();
+                if (args[0] == "b")
+                {
+                    Stopwatch watch = new Stopwatch();
 
-                watch.Start();
-                TestFile(sr, Console.Out, 10);
-                watch.Stop();
+                    watch.Start();
+                    TestFile(sr, Console.Out, 10);
+                    watch.Stop();
 
-                Console.Out.WriteLine();
-                Console.Out.WriteLine(watch.Elapsed + " " + watch.ElapsedMilliseconds + " " + watch.ElapsedTicks);
+                    Console.Out.WriteLine();
+                    Console.Out.WriteLine(watch.Elapsed + " " + watch.ElapsedMilliseconds + " " + watch.ElapsedTicks);
+                }
+                else if (args[0] == "t")
+                {
+                    double? avgMilliseconds = PerformanceTest(sr, Console.Out, 10, 10);
+                    Console.Out.WriteLine(avgMilliseconds);
+                }
             }
             else
             {
@@ -38,25 +46,50 @@ namespace JapaneseAutocomplete
             //TestFile(sr, file, int.MaxValue);
         }
 
-        static void TestFile(StreamReader tr, TextWriter sw, int limit)
+        static void TestFile(StreamReader input, TextWriter output, int limit)
         {
-            Vocabulary vocab = new Vocabulary(LoadFromFile(tr));
+            input.BaseStream.Position = 0; //  в начало файла
+            output.Flush();
 
-            int count = int.Parse(tr.ReadLine());
+            Vocabulary vocab = new Vocabulary(LoadFromFile(input));
 
-            while (count-- > 0 && !tr.EndOfStream)
+            int count = int.Parse(input.ReadLine());
+
+            while (count-- > 0 && !input.EndOfStream)
             {
-                string prefix = tr.ReadLine();
+                string prefix = input.ReadLine();
 
                 string [] completions = vocab.GetComplitions(prefix, limit);
                 foreach(string s in completions)
                 {
-                    sw.WriteLine(s);
+                    output.WriteLine(s);
                 }
 
                 if (completions.Count() > 0)
-                    sw.WriteLine("");
+                    output.WriteLine("");
             }
+        }
+
+        /// <summary>
+        /// Средняя производительность ф-и TestFile
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="limit"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        static double? PerformanceTest(StreamReader input, TextWriter output, int limit, int count)
+        {
+            Stopwatch watch = new Stopwatch();
+
+            for (int i = 0; i < count; ++i)
+            {
+                watch.Start();
+                TestFile(input, output, limit);
+                watch.Stop();
+            }
+
+            return watch.ElapsedMilliseconds / count;
         }
 
         static Dictionary<string, int> LoadFromFile(StreamReader fs)
@@ -84,6 +117,8 @@ namespace JapaneseAutocomplete
             //  то можно ничего не проверять. А вообще желательно проверить
             words.Add(tokens[0], int.Parse(tokens[1]));
         }
+
+
     }
 
 }

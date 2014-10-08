@@ -13,12 +13,18 @@ namespace Suggestion
     public class Trie : ITrie
     {
         private TrieNode _root;
+        private int _precomputedTopsCount = int.MaxValue;
 
         private ReaderWriterLock _rwLock = new ReaderWriterLock();
 
         public Trie()
         {
             _root = TrieNode.CreateRoot();
+        }
+
+        public Trie(int precomputedTopsCount) : this()
+        {
+            _precomputedTopsCount = precomputedTopsCount;
         }
 
         /// <summary>
@@ -148,8 +154,11 @@ namespace Suggestion
             TrieNode current = node;
             while (current != null)
             {
-                current.TopmostCompletionsSet.Add(node);
-                current = current.Parent;
+                if (current.TopmostCompletionsSet.Count < _precomputedTopsCount || current.TopmostCompletionsSet.Last().CompareTo(node) < 0)
+                {
+                    current.TopmostCompletionsSet.Add(node);
+                    current = current.Parent;
+                }
             }
         }
 
@@ -288,12 +297,10 @@ namespace Suggestion
 
         public int CompareTo(object obj)
         {
-            TrieNode node = (TrieNode)obj;
+            if (_weight == ((TrieNode)obj).Weight)
+                return Word.CompareTo(((TrieNode)obj).Word);
 
-            if (_weight == node.Weight)
-                return Word.CompareTo(node.Word);
-
-            return node.Weight - Weight;
+            return ((TrieNode)obj).Weight - Weight;
         }
 
         /// <summary>
