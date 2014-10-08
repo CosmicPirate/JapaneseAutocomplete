@@ -196,7 +196,7 @@ namespace Suggestion
         /// Конструктор
         /// </summary>
         /// <param name="character"></param>
-        private TrieNode(char character)
+        protected TrieNode(char character)
         {
             _character = character;
             _children = new Dictionary<char,TrieNode>();

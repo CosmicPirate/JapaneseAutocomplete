@@ -43,6 +43,9 @@ namespace JapaneseAutocompleteClient
                 return;
             }
 
+            Console.Out.WriteLine("Вводите слова. Для выхода введите пустую строку.");
+            Console.Out.Write("> ");
+
             string str = Console.In.ReadLine();
 
             while(str.Length > 0)
@@ -63,6 +66,8 @@ namespace JapaneseAutocompleteClient
                 {
                     Console.Out.WriteLine(ex.Message);
                 }
+
+                Console.Out.Write("> ");
 
                 str = Console.In.ReadLine();
             }
