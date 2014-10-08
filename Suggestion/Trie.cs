@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Suggestion
 {
@@ -12,6 +13,8 @@ namespace Suggestion
     public class Trie : ITrie
     {
         private TrieNode _root;
+
+        private ReaderWriterLock _rwLock = new ReaderWriterLock();
 
         public Trie()
         {
@@ -24,18 +27,33 @@ namespace Suggestion
         /// <param name="word"></param>
         public void AddWord(string word, int frequency)
         {
-            TrieNode currentNode = _root;
-
-            foreach(char ch in word)
+            try
             {
-                currentNode = currentNode.AddOrGetChild(ch);
+                _rwLock.AcquireWriterLock(10000);
+                try
+                {
+                    TrieNode currentNode = _root;
+
+                    foreach (char ch in word)
+                    {
+                        currentNode = currentNode.AddOrGetChild(ch);
+                    }
+
+                    currentNode.IsEndOfWord = true;
+                    currentNode.Word = word;
+                    currentNode.Weight = frequency;
+
+                    UpdateTopSuffixes(currentNode, word);
+                }
+                finally
+                {
+                    _rwLock.ReleaseWriterLock();
+                }
             }
+            catch
+            {
 
-            currentNode.IsEndOfWord = true;
-            currentNode.Word = word;
-            currentNode.Weight = frequency;
-
-            UpdateTopSuffixes(currentNode, word);
+            }
         }
 
         /// <summary>
@@ -45,24 +63,43 @@ namespace Suggestion
         /// <returns></returns>
         public IList<string> GetCompletions(string prefix, int limit)
         {
-            TrieNode prefixLastNode = FindPrefix(prefix);
+            string[] result;
 
-            if (prefixLastNode == null)
-                return new string[] { };
-            
-            SortedSet<TrieNode> completions = prefixLastNode.TopmostCompletionsSet;
-
-            int resultsCount = Math.Min(limit, completions.Count());
-            string[] result = new string[resultsCount];
-
-            int i = 0;
-            foreach(TrieNode node in completions)
+            try
             {
-                if (i >= resultsCount)
-                    break;
-                //result[i] = node.Word + " " + node.Weight;
-                result[i] = node.Word;
-                ++i;
+                _rwLock.AcquireReaderLock(10000);
+                try
+                {
+                    TrieNode prefixLastNode = FindPrefix(prefix);
+
+                    //  префикс не найден
+                    if (prefixLastNode == null)
+                        return new string[] { };
+
+                    SortedSet<TrieNode> completions = prefixLastNode.TopmostCompletionsSet;
+
+                    int resultsCount = Math.Min(limit, completions.Count());
+                    result = new string[resultsCount];
+
+                    int i = 0;
+                    foreach (TrieNode node in completions)
+                    {
+                        if (i >= resultsCount)
+                            break;
+                        //result[i] = node.Word + " " + node.Weight;
+                        result[i] = node.Word;
+                        ++i;
+                    }
+                }
+                catch { result = new string[] { }; }
+                finally
+                {
+                    _rwLock.ReleaseReaderLock();
+                }
+            }
+            catch (ApplicationException)
+            {
+                result = new string[] { };
             }
 
             return result;
@@ -127,7 +164,7 @@ namespace Suggestion
         private int _weight;
         private SortedSet<TrieNode> _topSuffixes;
         private Dictionary<char, TrieNode> _children;
-        
+
         #region geters setters
         
         /// <summary>
@@ -209,6 +246,7 @@ namespace Suggestion
         /// <param name="ch"></param>
         public TrieNode AddOrGetChild(char ch)
         {
+
             if (!_children.ContainsKey(ch))
             {
                 TrieNode child = new TrieNode(ch);
