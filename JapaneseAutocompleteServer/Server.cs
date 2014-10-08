@@ -53,8 +53,20 @@ namespace JapaneseAutocompleteServer
         {
             while (true)
             {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ClientWaitCallback), _listener.AcceptTcpClient());
-                //Handler.ProcessCLient(_listener.AcceptTcpClient());
+                TcpClient client = _listener.AcceptTcpClient();
+                
+                int workerThreads, completionPortThreads;
+                ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+
+                if (workerThreads > 0)
+                {
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ClientWaitCallback), client);
+                }
+                else
+                {
+                    Thread thread = new Thread(new ParameterizedThreadStart(ClientWaitCallback));
+                    thread.Start(client);
+                }
             }
         }
 
