@@ -16,7 +16,11 @@ namespace JapaneseAutocomplete
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
             Thread.CurrentThread.Priority = ThreadPriority.Highest;
 
-            StreamReader sr = System.IO.File.OpenText("test.in");
+#if DEBUG
+            System.Diagnostics.Debugger.Launch();
+#endif
+
+            TextReader reader = Console.In;
 
             if (args.Length >= 1)
             {
@@ -25,7 +29,7 @@ namespace JapaneseAutocomplete
                     Stopwatch watch = new Stopwatch();
 
                     watch.Start();
-                    TestFile(sr, Console.Out, 10);
+                    TestFile(reader, Console.Out, 10);
                     watch.Stop();
 
                     Console.Out.WriteLine();
@@ -33,29 +37,28 @@ namespace JapaneseAutocomplete
                 }
                 else if (args[0] == "t")
                 {
-                    double? avgMilliseconds = PerformanceTest(sr, Console.Out, 10, 10);
+                    double? avgMilliseconds = PerformanceTest(reader, Console.Out, 10, 10);
                     Console.Out.WriteLine(avgMilliseconds);
                 }
             }
             else
             {
-                TestFile(sr, Console.Out, 10);
+                TestFile(Console.In, Console.Out, 10);
             }
-
-            //TextWriter file = File.CreateText("test.out");
-            //TestFile(sr, file, int.MaxValue);
         }
 
-        static void TestFile(StreamReader input, TextWriter output, int limit)
+        static void TestFile(TextReader input, TextWriter output, int limit)
         {
-            input.BaseStream.Position = 0; //  в начало файла
+            //input.BaseStream.Position = 0; //  в начало файла
             output.Flush();
 
-            Vocabulary vocab = new Vocabulary(LoadFromFile(input));
+            Vocabulary vocab = new Vocabulary(LoadFromStream(input));
 
-            int count = int.Parse(input.ReadLine());
+            //  чтение префиксов
+            string countS = input.ReadLine();
+            int count = int.Parse(countS);
 
-            while (count-- > 0 && !input.EndOfStream)
+            while (count-- > 0)
             {
                 string prefix = input.ReadLine();
 
@@ -65,8 +68,8 @@ namespace JapaneseAutocomplete
                     output.WriteLine(s);
                 }
 
-                if (completions.Count() > 0)
-                    output.WriteLine("");
+                //if (completions.Count() > 0)
+                    output.WriteLine();
             }
         }
 
@@ -78,7 +81,7 @@ namespace JapaneseAutocomplete
         /// <param name="limit"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        static double? PerformanceTest(StreamReader input, TextWriter output, int limit, int count)
+        static double? PerformanceTest(TextReader input, TextWriter output, int limit, int count)
         {
             Stopwatch watch = new Stopwatch();
 
@@ -92,7 +95,7 @@ namespace JapaneseAutocomplete
             return watch.ElapsedMilliseconds / count;
         }
 
-        static Dictionary<string, int> LoadFromFile(StreamReader fs)
+        static Dictionary<string, int> LoadFromStream(TextReader fs)
         {
             Dictionary<string, int> words = new Dictionary<string, int>();
 
@@ -100,7 +103,7 @@ namespace JapaneseAutocomplete
             string c = fs.ReadLine();
             int count = int.Parse(c);
             //  читаем слова
-            while (count > 0 && !fs.EndOfStream)
+            while (count > 0)
             {
                 LoadWordFromLine(fs.ReadLine(), words);
                 --count;

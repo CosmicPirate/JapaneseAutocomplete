@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseAutocompleteServer"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseAutocompleteClient", "JapaneseAutocompleteClient\JapaneseAutocompleteClient.csproj", "{EA01090E-0297-4036-8ABD-B73B12F85731}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuggestionTests", "SuggestionTests\SuggestionTests.csproj", "{BBB48929-6CF7-4ADA-AFFC-576C90025200}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,11 +35,12 @@ Global
 		{EA01090E-0297-4036-8ABD-B73B12F85731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA01090E-0297-4036-8ABD-B73B12F85731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA01090E-0297-4036-8ABD-B73B12F85731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB48929-6CF7-4ADA-AFFC-576C90025200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB48929-6CF7-4ADA-AFFC-576C90025200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB48929-6CF7-4ADA-AFFC-576C90025200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB48929-6CF7-4ADA-AFFC-576C90025200}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Suggestion.UnitTests
 {
-    
+
     [TestFixture]
     public class TrieTest
     {
